@@ -194,7 +194,7 @@ async function loadIyyata(){
     html += "<option"+(x.haala==="Eegaa"?" selected":"")+">Eegaa</option>";
     html += "<option"+(x.haala==="Fudhatame"?" selected":"")+">Fudhatame</option>";html += "<option"+(x.haala==="Dhiifame"?" selected":"")+">Dhiifame</option>";
     html += "</select></td>";
-    html += "<td><input type='text' id='u-"+x.id+"' value='"+(x.waraqaa_url||"")+"' placeholder='https://...' style='width:130px'></td>";
+    html += "<td><input type='text' id='u-"+x.id+"' value=\""+(x.waraqaa_url||"")+"\" placeholder='https://...' style='width:130px'></td>";
     html += "<td class='no-print'><button type='button' class='btn' onclick='saveIyyata("+x.id+")'>Save</button></td>";
     html += "</tr>";
   }
