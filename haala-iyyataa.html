@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haala Iyyataa | Magaalaa Bulbulaa</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:system-ui;background:#f5f5f5;margin:0}
+.container{max-width:950px;margin:0 auto;padding:0 20px}
+header{background:#111;color:#fff;padding:14px 0;border-bottom:4px solid #c8102e}
+.nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.logo span{color:#ff4d6d}
+nav a{color:#ddd;text-decoration:none;padding:7px 12px;border-radius:6px}
+nav a:hover{background:#c8102e}
+.page{background:#111;color:#fff;padding:35px 0;text-align:center;border-bottom:4px solid #c8102e}
+table{width:100%;border-collapse:collapse;background:#fff;margin:25px 0;border-radius:10px;overflow:hidden}
+th,td{padding:12px;border-bottom:1px solid #eee;text-align:left;font-size:.92rem}
+th{background:#111;color:#fff}
+.badge{padding:4px 10px;border-radius:20px;font-size:.85rem;font-weight:600}
+.eegaa{background:#fff3cd;color:#856404}
+.fudhatame{background:#d1e7dd;color:#0f5132}
+.dhiifame{background:#f8d7da;color:#842029}
+.btn{padding:6px 12px;background:#c8102e;color:#fff;border:none;border-radius:5px;text-decoration:none;font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <div class="logo">Magaalaa <span>Bulbulaa</span></div>
+    <nav>
+      <a href="tajaajila.html">Tajaajila</a>
+      <a href="gibiraa.html">Gibiraa</a>
+      <a href="haala-iyyataa.html">Haala Iyyataa</a>
+      <a href="#" id="logoutBtn">Logout</a>
+    </nav>
+  </div>
+</header>
+<div class="page"><div class="container"><h1>Haala Iyyataa Koo</h1><p id="userName"></p></div></div>
+<div class="container">
+<table>
+  <thead><tr><th>Gosa</th><th>Ibsa</th><th>Haala</th><th>Print / Download</th></tr></thead>
+  <tbody id="tbody"></tbody>
+</table>
+</div>
+<script>
+var user = null;
+try { user = JSON.parse(localStorage.getItem('currentUser')||'null'); } catch(e){}
+if (!user) { alert('Login godhi!'); location.href='login.html'; }
+
+document.getElementById('userName').textContent = user.maqaa + ' (' + user.bilbila + ')';
+document.getElementById('logoutBtn').onclick = function(e){
+  e.preventDefault();
+  localStorage.removeItem('currentUser');
+  location.href='login.html';
+};
+
+var sb = window.supabase.createClient(
+  'https://wjfvluhjgsvrzkhuzaoi.supabase.co',
+  'sb_publishable_X5froRQvVq1pFxVXZa3p3w_c5ptm_Bs'
+);
+
+(async function(){
+  var res = await sb.from('iyyatota').select('*').eq('bilbila', user.bilbila).order('id',{ascending:false});
+  var arr = res.data || [];
+  var tb = document.getElementById('tbody');
+  if (!arr.length) {
+    tb.innerHTML = '<tr><td colspan="4" style="text-align:center">Iyyata hin jiru</td></tr>';
+    return;
+  }
+  var html = '';
+  for (var i=0;i<arr.length;i++){
+    var x = arr[i];
+    var cls = x.haala==='Fudhatame'?'fudhatame':(x.haala==='Dhiifame'?'dhiifame':'eegaa');
+    var action = '-';
+    if (x.haala === 'Fudhatame') {
+      if (x.waraqaa_url) {
+        action = '<a class="btn" href="'+x.waraqaa_url+'" target="_blank">Download</a> ';
+      }
+      action += '<a class="btn" href="print.html?id='+x.id+'">Print</a>';
+    }
+    html += '<tr><td>'+(x.gosa_iyyataa'-')+'</td><td>'+((x.ibsa'').substring(0,50))+'</td>';
+    html += '<td><span class="badge '+cls+'">'+(x.haala||'Eegaa')+'</span></td><td>'+action+'</td></tr>';
+  }
+  tb.innerHTML = html;
+})();
+</script>
+</body>
+</html>

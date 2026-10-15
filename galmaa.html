@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galmaa'uu | Magaalaa Bulbulaa</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;background:#111;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fff;width:100%;max-width:420px;padding:32px 28px;border-radius:14px;border-top:5px solid #c8102e}
+h2{text-align:center;margin-bottom:5px}
+.sub{text-align:center;color:#666;margin-bottom:20px;font-size:.95rem}
+label{display:block;margin-bottom:4px;font-weight:600;font-size:.93rem}
+input,select{width:100%;padding:11px;border:1.5px solid #ccc;border-radius:8px;margin-bottom:13px;font-size:1rem}
+button{width:100%;padding:13px;background:#c8102e;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+button:disabled{opacity:.6}
+.link{text-align:center;margin-top:16px;font-size:.95rem}
+.link a{color:#c8102e;font-weight:600;text-decoration:none}
+.msg{display:none;margin-top:12px;padding:10px;border-radius:8px;text-align:center}
+.ok{background:#d1e7dd;color:#0f5132}
+.err{background:#f8d7da;color:#842029}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Galmaa'uu</h2>
+  <p class="sub">Magaalaa Bulbulaa</p>
+  <form id="form">
+    <label>Maqaa Guutuu *</label>
+    <input type="text" id="maqaa" required>
+    <label>Lakkoofsa Bilbilaa *</label>
+    <input type="tel" id="bilbila" required>
+    <label>Gosa Hojii *</label>
+    <select id="gosa" required>
+      <option value="">Filadhu</option>
+      <option value="Hojjetaa Mootummaa">Hojjetaa Mootummaa</option>
+      <option value="Daldalaa">Daldalaa</option>
+      <option value="Qotee bulaa">Qotee bulaa</option>
+      <option value="Barataa">Barataa</option>
+    </select>
+    <label>Sadarkaa Gaailaa *</label>
+    <select id="gaailaa" required>
+      <option value="">Filadhu</option>
+      <option value="Fuudhe">Fuudhe</option>
+      <option value="Hin fuune">Hin fuune</option>
+    </select>
+    <label>Password *</label>
+    <input type="password" id="password" required>
+    <button type="submit" id="btn">Galmaa'i</button>
+  </form>
+  <div id="msg" class="msg"></div>
+  <p class="link">Durumaan galmaayeetta? <a href="login.html">Login</a></p>
+</div>
+
+<script>
+  // Client uumi (maqaa 'sb' fayyadami — 'supabase' hin fayyadamin)
+  const sb = window.supabase.createClient(
+    'https://wjfvluhjgsvrzkhuzaoi.supabase.co',
+    'sb_publishable_X5froRQvVq1pFxVXZa3p3w_c5ptm_Bs'
+  )
+
+  document.getElementById('form').onsubmit = async function(e) {
+    e.preventDefault()
+    const msg = document.getElementById('msg')
+    const btn = document.getElementById('btn')
+    msg.style.display = 'none'
+    btn.disabled = true
+    btn.textContent = 'Eegaa...'
+
+    try {
+      const { data, error } = await sb.from('users').insert([{
+        maqaa: document.getElementById('maqaa').value.trim(),
+        bilbila: document.getElementById('bilbila').value.trim(),
+        gosa_hojii: document.getElementById('gosa').value,
+        gaailaa: document.getElementById('gaailaa').value,
+        password: document.getElementById('password').value
+      }]).select()
+
+      if (error) {
+        msg.className = 'msg err'
+        msg.style.display = 'block'
+        msg.textContent = error.message
+        console.error(error)
+        btn.disabled = false
+        btn.textContent = "Galmaa'i"
+        return
+      }
+
+      msg.className = 'msg ok'
+      msg.style.display = 'block'
+      msg.textContent = "Galmaa'uun milkaa'eera!"
+      setTimeout(function(){ location.href = 'login.html' }, 1500)
+    } catch (err) {
+      msg.className = 'msg err'
+      msg.style.display = 'block'
+      msg.textContent = 'Dogoggora: ' + err.message
+      btn.disabled = false
+      btn.textContent = "Galmaa'i"
+    }
+  }
+</script>
+</body>
+</html>

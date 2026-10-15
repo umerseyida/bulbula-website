@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Magaalaa Bulbulaa</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;background:#111;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fff;width:100%;max-width:400px;padding:32px 28px;border-radius:14px;border-top:5px solid #c8102e}
+h2{text-align:center;margin-bottom:5px}
+.sub{text-align:center;color:#666;margin-bottom:20px}
+label{display:block;margin-bottom:4px;font-weight:600}
+input{width:100%;padding:11px;border:1.5px solid #ccc;border-radius:8px;margin-bottom:13px}
+button{width:100%;padding:13px;background:#c8102e;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+.link{text-align:center;margin-top:16px}
+.link a{color:#c8102e;font-weight:600;text-decoration:none}
+.err{display:none;margin-top:12px;padding:10px;background:#f8d7da;color:#842029;border-radius:8px;text-align:center}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Login</h2>
+  <p class="sub">Magaalaa Bulbulaa</p>
+  <form id="form">
+    <label>Lakkoofsa Bilbilaa *</label>
+    <input type="tel" id="bilbila" required>
+    <label>Password *</label>
+    <input type="password" id="password" required>
+    <button type="submit">Seeni</button>
+  </form>
+  <div id="err" class="err"></div>
+  <p class="link">Hin galmaayee? <a href="galmaa.html">Galmaa'i</a></p>
+</div>
+
+<script>
+  const sb = window.supabase.createClient(
+    'https://wjfvluhjgsvrzkhuzaoi.supabase.co',
+    'sb_publishable_X5froRQvVq1pFxVXZa3p3w_c5ptm_Bs'
+  )
+
+  document.getElementById('form').onsubmit = async function(e) {
+    e.preventDefault()
+    const errBox = document.getElementById('err')
+    errBox.style.display = 'none'
+
+    const { data, error } = await sb
+      .from('users')
+      .select('*')
+      .eq('bilbila', document.getElementById('bilbila').value.trim())
+      .eq('password', document.getElementById('password').value)
+      .maybeSingle()
+
+    if (error || !data) {
+      errBox.style.display = 'block'
+      errBox.textContent = 'Bilbila yookiin Password dogoggoraa dha!'
+      return
+    }
+
+    localStorage.setItem('currentUser', JSON.stringify(data))
+    location.href = 'tajaajila.html'
+  }
+</script>
+</body>
+</html>

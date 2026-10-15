@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | Magaalaa Bulbulaa</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:system-ui;margin:0;background:#f0f2f5}
+.top{background:#111;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #c8102e;flex-wrap:wrap;gap:8px}
+.top a,.top button{color:#fff;background:#c8102e;border:none;padding:8px 14px;border-radius:6px;text-decoration:none;cursor:pointer;font-size:.95rem}
+.box{max-width:1100px;margin:20px auto;padding:0 12px}
+.card{background:#fff;padding:18px;border-radius:10px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.badge{display:inline-block;background:#c8102e;color:#fff;padding:2px 10px;border-radius:20px;font-size:.85rem;margin-left:8px}
+input,textarea,select{padding:8px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box}
+button,.btn{background:#c8102e;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:600}
+button.gray{background:#555}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.88rem}
+th,td{padding:8px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}
+th{background:#111;color:#fff}
+.ok{color:green;font-weight:600}
+img.thumb{max-width:60px;max-height:60px;border-radius:4px;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal img{max-width:90%;max-height:90%}
+@media print{
+  .top,.no-print{display:none}
+  .card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="top no-print">
+  <strong>Bulbulaa Admin</strong>
+  <div>
+    <a href="../index.html">Website</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </div>
+</div>
+
+<div class="box">
+
+  <div class="card">
+    <h2>Dashboard</h2>
+    <p>
+      Jiraattota: <strong id="cUsers">0</strong> |
+      Iyyata: <strong id="cIyyata">0</strong>
+      <span id="newIyyataBadge" class="badge" style="display:none"></span> |
+      Gibiraa: <strong id="cGibiraa">0</strong>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Jiraattota
+      <button type="button" class="btn no-print" id="btnPdf" style="margin-left:10px">PDF / Print</button>
+    </h2>
+    <table id="tableUsers">
+      <thead><tr><th>Maqaa</th><th>Bilbila</th><th>Gosa Hojii</th><th>Gaailaa</th><th class="no-print">Haqi</th></tr></thead>
+      <tbody id="tbodyUsers"><tr><td colspan="5">Loading...</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Iyyatota — Confirm</h2>
+    <p class="no-print" style="color:#666;font-size:.9rem">Haala → Fudhatame filadhu → Save. Print user biratti Fudhatame booda qofa mul’ata.</p>
+    <table>
+      <thead><tr><th>Maqaa</th><th>Iyyata</th><th>Ibsa</th><th>Haala</th><th>Waraqaa URL</th><th class="no-print">Save</th></tr></thead>
+      <tbody id="tbodyIyyata"><tr><td colspan="6">Loading...</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Gibiraa — Nagahee + Confirm</h2>
+    <table>
+      <thead><tr><th>Maqaa</th><th>Gosa</th><th>Maallaqa</th><th>Nagahee</th><th>Haala</th></tr></thead>
+      <tbody id="tbodyGibiraa"><tr><td colspan="5">Loading...</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- Password Jijjiiri Card -->
+  <div class="card no-print">
+    <h2>Password Jijjiiri</h2>
+    <label>Password haaraa</label>
+    <input type="password" id="newPass" placeholder="Password haaraa" style="width:100%;max-width:320px;display:block;margin:8px 0">
+    <label>Password haaraa deebisi</label>
+    <input type="password" id="newPass2" placeholder="Deebisi" style="width:100%;max-width:320px;display:block;margin:8px 0">
+    <button type="button" id="btnChangePass">Password Jijjiiri</button>
+    <p id="passMsg" class="ok"></p>
+  </div><div class="card no-print">
+    <h2>Beeksisa Maxxansi</h2>
+    <input type="text" id="mataduree" placeholder="Mataduree" style="width:100%;margin-bottom:8px">
+    <textarea id="qabiyyee" rows="2" placeholder="Qabiyyee" style="width:100%"></textarea>
+    <button type="button" id="btnMaxxansi" style="margin-top:8px">Maxxansi</button>
+    <p id="msg" class="ok"></p>
+    <table>
+      <thead><tr><th>Mataduree</th><th>Guyyaa</th><th>Haqi</th></tr></thead>
+      <tbody id="listBeeksisa"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal" id="modal" onclick="this.classList.remove('show')">
+  <img id="modalImg" src="" alt="Nagahee">
+</div>
+
+<script>
+var URL = "https://wjfvluhjgsvrzkhuzaoi.supabase.co";
+var KEY = "sb_publishable_X5froRQvVq1pFxVXZa3p3w_c5ptm_Bs";
+function sb(){ return window.supabase.createClient(URL, KEY); }
+
+if (localStorage.getItem("admin") !== "true") {
+  location.href = "login.html";
+}
+
+document.getElementById("logoutLink").onclick = function(e){
+  e.preventDefault();
+  localStorage.removeItem("admin");
+  location.href = "login.html";
+};
+
+function showImg(src){
+  document.getElementById("modalImg").src = src;
+  document.getElementById("modal").classList.add("show");
+}
+
+/* ===== Users + Remove + PDF ===== */
+async function loadUsers(){
+  var res = await sb().from("users").select("id,maqaa,bilbila,gosa_hojii,gaailaa");
+  var data = res.data || [];
+  document.getElementById("cUsers").textContent = data.length;
+  var html = "";
+  for (var i = 0; i < data.length; i++) {
+    var u = data[i];
+    html += "<tr><td>"+(u.maqaa"-")+"</td><td>"+(u.bilbila"-")+"</td>";
+    html += "<td>"+(u.gosa_hojii"-")+"</td><td>"+(u.gaailaa"-")+"</td>";
+    html += "<td class='no-print'><button type='button' class='btn' onclick='removeUser("+u.id+")'>Haqi</button></td></tr>";
+  }
+  document.getElementById("tbodyUsers").innerHTML = html || "<tr><td colspan='5'>Hin jiru</td></tr>";
+}
+
+async function removeUser(id){
+  if (!confirm("User kana haquu barbaaddaa?")) return;
+  var res = await sb().from("users").delete().eq("id", id);
+  if (res.error) alert(res.error.message);
+  else {
+    alert("User haqameera!");
+    loadUsers();
+  }
+}
+
+document.getElementById("btnPdf").onclick = function(){
+  window.print();
+};
+
+/* ===== Iyyata Confirm ===== */
+async function loadIyyata(){
+  var res = await sb().from("iyyatota").select("*").order("id", {ascending:false});
+  if (res.error) {
+    document.getElementById("tbodyIyyata").innerHTML =
+      "<tr><td colspan='6'>Error: "+res.error.message+"</td></tr>";
+    return;
+  }
+  var arr = res.data || [];
+  document.getElementById("cIyyata").textContent = arr.length;
+
+  var lastSeen = parseInt(localStorage.getItem("admin_last_iyyata") || "0", 10);
+  var newest = 0;
+  var newCount = 0;
+  for (var i = 0; i < arr.length; i++) {
+    var idn = parseInt(arr[i].id, 10) || 0;
+    if (idn > newest) newest = idn;
+    if (idn > lastSeen) newCount++;
+  }
+  var badge = document.getElementById("newIyyataBadge");
+  if (newCount > 0) {
+    badge.style.display = "inline-block";
+    badge.textContent = newCount + " haaraa";
+    if (window.Notification && Notification.permission === "granted") {
+      new Notification("Bulbulaa Admin", { body: newCount + " iyyata haaraa jira" });
+    }
+  } else {
+    badge.style.display = "none";
+  }
+  localStorage.setItem("admin_last_iyyata", String(newest));
+
+  var html = "";
+  for (var j = 0; j < arr.length; j++) {
+    var x = arr[j];
+    html += "<tr>";
+    html += "<td>"+(x.maqaa||"-")+"</td>";
+    html += "<td>"+(x.gosa_iyyataa||"-")+"</td>";
+    html += "<td>"+((x.ibsa||"").substring(0,40))+"</td>";
+    html += "<td><select id='h-"+x.id+"'>";
+    html += "<option"+(x.haala==="Eegaa"?" selected":"")+">Eegaa</option>";
+    html += "<option"+(x.haala==="Fudhatame"?" selected":"")+">Fudhatame</option>";html += "<option"+(x.haala==="Dhiifame"?" selected":"")+">Dhiifame</option>";
+    html += "</select></td>";
+    html += "<td><input type='text' id='u-"+x.id+"' value='"+(x.waraqaa_url||"")+"' placeholder='https://...' style='width:130px'></td>";
+    html += "<td class='no-print'><button type='button' class='btn' onclick='saveIyyata("+x.id+")'>Save</button></td>";
+    html += "</tr>";
+  }
+  document.getElementById("tbodyIyyata").innerHTML = html || "<tr><td colspan='6'>Hin jiru</td></tr>";
+}
+
+async function saveIyyata(id){
+  var haala = document.getElementById("h-"+id).value;
+  var url = document.getElementById("u-"+id).value.trim();
+  var res = await sb().from("iyyatota").update({
+    haala: haala,
+    waraqaa_url: url || null
+  }).eq("id", id);
+  if (res.error) alert(res.error.message);
+  else alert("Confirm save ta'eera: " + haala);
+  loadIyyata();
+}
+
+/* ===== Gibiraa ===== */
+async function loadGibiraa(){
+  var res = await sb().from("gibiraa").select("*").order("id", {ascending:false});
+  var arr = res.data || [];
+  document.getElementById("cGibiraa").textContent = arr.length;
+  var html = "";
+  for (var i = 0; i < arr.length; i++) {
+    var g = arr[i];
+    var img = "-";
+    if (g.nagahee && String(g.nagahee).indexOf("data:image") === 0) {
+      img = "<img class='thumb' src='"+g.nagahee+"' onclick='showImg(this.src)'>";
+    } else if (g.nagahee) {
+      img = "Jira";
+    }
+    html += "<tr><td>"+(g.maqaa"-")+"</td><td>"+(g.gosa"-")+"</td><td>"+(g.maallaqa||"-")+"</td><td>"+img+"</td>";
+    html += "<td><select data-id='"+g.id+"' class='g-haala'>";
+    html += "<option"+(g.haala==="Eegaa"?" selected":"")+">Eegaa</option>";
+    html += "<option"+(g.haala==="Mirkanaa'e"?" selected":"")+">Mirkanaa'e</option>";
+    html += "<option"+(g.haala==="Dhiifame"?" selected":"")+">Dhiifame</option>";
+    html += "</select></td></tr>";
+  }
+  document.getElementById("tbodyGibiraa").innerHTML = html || "<tr><td colspan='5'>Hin jiru</td></tr>";
+  var sels = document.querySelectorAll(".g-haala");
+  for (var j = 0; j < sels.length; j++) {
+    sels[j].onchange = async function(){
+      await sb().from("gibiraa").update({haala: this.value}).eq("id", this.getAttribute("data-id"));
+      alert("Gibiraa: " + this.value);
+    };
+  }
+}
+
+/* ===== Password Jijjiiri Function ===== */
+document.getElementById("btnChangePass").onclick = function () {
+  var a = document.getElementById("newPass").value;
+  var b = document.getElementById("newPass2").value;
+  if (!a || a.length < 4) {
+    alert("Password yoo xiqqaate arfan ta'uu qaba");
+    return;
+  }
+  if (a !== b) {
+    alert("Password lama wal hin fakkaatu!");
+    return;
+  }
+  localStorage.setItem("admin_password", a);
+  document.getElementById("newPass").value = "";
+  document.getElementById("newPass2").value = "";
+  document.getElementById("passMsg").textContent = "Password jijjiirameera!";
+  alert("Password haaraa kuufameera. Al tokko login deebi'i.");
+};
+
+/* ===== Beeksisa ===== */
+function getBeeksisa(){
+  try { return JSON.parse(localStorage.getItem("beeksisa")||"[]"); } catch(e){ return []; }
+}
+function renderBeeksisa(){
+  var arr = getBeeksisa();
+  var html = "";
+  for (var i = arr.length-1; i >= 0; i--) {
+    html += "<tr><td>"+arr[i].mataduree+"</td><td>"+arr[i].guyyaa+"</td>";
+    html += "<td><button type='button' class='btn' onclick='haqiB("+i+")'>Haqi</button></td></tr>";
+  }
+  document.getElementById("listBeeksisa").innerHTML = html || "<tr><td colspan='3'>Hin jiru</td></tr>";
+}
+function haqiB(i){
+  var a = getBeeksisa();
+  a.splice(i,1);
+  localStorage.setItem("beeksisa", JSON.stringify(a));
+  renderBeeksisa();
+}
+document.getElementById("btnMaxxansi").onclick = function(){
+  var t = document.getElementById("mataduree").value.trim();
+  var q = document.getElementById("qabiyyee").value.trim();if (!t || !q) { alert("Guuti!"); return; }
+  var a = getBeeksisa();
+  a.push({mataduree:t, qabiyyee:q, guyyaa: new Date().toLocaleString()});
+  localStorage.setItem("beeksisa", JSON.stringify(a));
+  localStorage.setItem("beeksisa_version", String(Date.now()));
+  document.getElementById("mataduree").value = "";
+  document.getElementById("qabiyyee").value = "";
+  document.getElementById("msg").textContent = "Maxxanfameera!";
+  renderBeeksisa();
+};
+
+if (window.Notification && Notification.permission === "default") {
+  Notification.requestPermission();
+}
+
+loadUsers();
+loadIyyata();
+loadGibiraa();
+renderBeeksisa();
+</script>
+</body>
+</html>

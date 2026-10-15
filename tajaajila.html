@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tajaajila</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:system-ui;background:#f5f5f5;margin:0}
+.wrap{max-width:560px;margin:40px auto;background:#fff;padding:28px;border-radius:12px;border-top:5px solid #c8102e}
+label{display:block;font-weight:600;margin-top:10px}
+input,select,textarea{width:100%;padding:10px;margin-top:4px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
+button{width:100%;margin-top:16px;padding:12px;background:#c8102e;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+a{color:#c8102e}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>Iyyata Galchi</h2>
+  <p id="hi"></p>
+  <p><a href="index.html">Fuula Dursa</a> | <a href="haala-iyyataa.html">Haala Iyyataa</a> | <a href="#" id="out">Logout</a></p>
+  <form id="f">
+    <label>Gosa Iyyataa</label>
+    <select id="gosa" required>
+      <option value="">Filadhu</option>
+      <option value="Waraqaa Eenyummaa">Waraqaa Eenyummaa</option>
+      <option value="Waraqaa Dhalootaa">Waraqaa Dhalootaa</option>
+      <option value="Waraqaa Fuudhaa">Waraqaa Fuudhaa</option>
+      <option value="Kan biroo">Kan biroo</option>
+    </select>
+    <label>Teessoo</label>
+    <input id="teessoo" type="text">
+    <label>Ibsa</label>
+    <textarea id="ibsa" rows="3" required></textarea>
+    <button type="submit" id="btn">Iyyata Galchi</button>
+  </form>
+</div>
+<script>
+var raw = localStorage.getItem("currentUser");
+var u = raw ? JSON.parse(raw) : null;
+if (!u) {
+  alert("Login godhi");
+  location.href = "login.html";
+}
+document.getElementById("hi").textContent = "Nagaa, " + (u.maqaa || "");
+document.getElementById("out").onclick = function (e) {
+  e.preventDefault();
+  localStorage.removeItem("currentUser");
+  location.href = "login.html";
+};
+document.getElementById("f").onsubmit = async function (e) {
+  e.preventDefault();
+  var g = document.getElementById("gosa").value;
+  var t = document.getElementById("teessoo").value;
+  var ib = document.getElementById("ibsa").value;
+  if (!g || !ib) {
+    alert("Gosa fi Ibsa guuti");
+    return;
+  }
+  document.getElementById("btn").disabled = true;
+  var client = window.supabase.createClient(
+    "https://wjfvluhjgsvrzkhuzaoi.supabase.co",
+    "sb_publishable_X5froRQvVq1pFxVXZa3p3w_c5ptm_Bs"
+  );
+  var res = await client.from("iyyatota").insert([
+    {
+      maqaa: u.maqaa || "",
+      bilbila: u.bilbila || "",
+      gosa_hojii: u.gosa_hojii || "",
+      gosa_iyyataa: g,
+      teessoo: t,
+      ibsa: ib,
+      haala: "Eegaa"
+    }
+  ]).select();
+  document.getElementById("btn").disabled = false;
+  if (res.error) {
+    alert(res.error.message);
+  } else {
+    alert("Iyyatni galma'eera");
+    document.getElementById("f").reset();
+  }
+};
+</script>
+</body>
+</html>

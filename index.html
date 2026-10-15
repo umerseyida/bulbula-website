@@ -1,0 +1,121 @@
+x<!DOCTYPE html>
+<html lang="om">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magaalaa Bulbulaa</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--black:#111;--red:#c8102e;--dark-red:#9b0c24}
+    body{font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;color:#222}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    header{background:var(--black);color:#fff;padding:14px 0;position:sticky;top:0;z-index:100;border-bottom:4px solid var(--red)}
+    .nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+    .logo{font-size:1.3rem;font-weight:700}
+    .logo span{color:#ff4d6d}
+    nav a{color:#ddd;text-decoration:none;padding:8px 12px;border-radius:6px;font-size:.93rem}
+    nav a:hover,nav a.active{background:var(--red);color:#fff}
+    .btn{padding:12px 26px;border-radius:8px;text-decoration:none;font-weight:600;display:inline-block}
+    .btn-red{background:var(--red);color:#fff}
+    .btn-red:hover{background:var(--dark-red)}
+    .btn-out{border:2px solid #fff;color:#fff}
+    .btn-out:hover{background:#fff;color:#111}
+    .hero{min-height:85vh;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;
+      background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),url('gadaa.jpg') center/cover no-repeat}
+    .hero h1{font-size:2.8rem;margin-bottom:15px}
+    .hero h1 span{color:#ff4d6d}
+    .hero p{font-size:1.15rem;margin-bottom:28px;max-width:600px;margin-left:auto;margin-right:auto}
+    .hero-btns{display:flex;gap:15px;justify-content:center;flex-wrap:wrap}
+    .features{padding:70px 0;background:#f5f5f5}
+    .title{text-align:center;font-size:2rem;margin-bottom:40px}
+    .title span{color:var(--red)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px}
+    .card{background:#fff;padding:28px 20px;border-radius:12px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.07);border-top:4px solid var(--red)}
+    .card i{font-size:2.2rem;color:var(--red);margin-bottom:12px}
+    .emergency{background:var(--black);color:#fff;padding:50px 0;text-align:center}
+    .emergency h2{color:#ff4d6d;margin-bottom:10px}
+    .nums{display:flex;justify-content:center;gap:25px;flex-wrap:wrap;margin-top:25px}
+    .num{background:#1a1a1a;padding:18px 30px;border-radius:10px;border:2px solid var(--red)}
+    .num h3{font-size:1.5rem;color:#ff4d6d}
+    .stats{background:var(--red);color:#fff;padding:45px 0}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+    .stats h3{font-size:2.2rem}
+    footer{background:var(--black);color:#aaa;padding:30px 0;border-top:4px solid var(--red);text-align:center;font-size:.9rem}
+    @media(max-width:800px){.hero h1{font-size:2rem}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <div class="logo">Magaalaa <span>Bulbulaa</span></div>
+    <nav>
+      <a href="index.html" class="active">Fuula Dursa</a>
+      <a href="about.html">Waa'ee</a>
+      <a href="galmaa.html">Galmaa'uu</a>
+      <a href="login.html">Login</a>
+      <a href="tajaajila.html">Tajaajila</a>
+      <a href="admin/login.html">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Baga Nagaan Dhuftan Magaalaa <span>Bulbulaa</span></h1>
+    <p>Hariiroo Bulchiinsa Magaalaa fi Hawaasaa cimsuuf</p>
+    <div class="hero-btns">
+      <a href="galmaa.html" class="btn btn-red">Galmaa'i</a>
+      <a href="login.html" class="btn btn-out">Login</a>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container"><h2 class="title">Tajaajila <span>Keenya</span></h2>
+    <div class="grid">
+      <div class="card"><i class="fas fa-id-card"></i><h3>Waraqaa Eenyummaa</h3><p>ID gaafadhu</p></div>
+      <div class="card"><i class="fas fa-baby"></i><h3>Waraqaa Dhalootaa</h3><p>Birth certificate</p></div>
+      <div class="card"><i class="fas fa-heart"></i><h3>Waraqaa Fuudhaa</h3><p>Marriage certificate</p></div>
+      <div class="card"><i class="fas fa-coins"></i><h3>Gibiraa</h3><p>Tax kaffaluu</p></div>
+      <div class="card"><i class="fas fa-bullhorn"></i><h3>Beeksisa</h3><p>Odeeffannoo haaraa</p></div>
+      <div class="card"><i class="fas fa-file-alt"></i><h3>Gabaasa</h3><p>Gabaasa hojii</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="emergency">
+  <div class="container">
+    <h2><i class="fas fa-exclamation-triangle"></i> Emergency</h2>
+    <p>Yeroo hatattamaa lakkoofsa armaan gadii bilbilaa</p>
+    <div class="nums">
+      <div class="num"><h3>911</h3><p>Poolisii</p></div>
+      <div class="num"><h3>907</h3><p>Ambulance</p></div>
+      <div class="num"><h3>904</h3><p>Ibiddasaa</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div><h3 id="users">0</h3><p>Jiraattota</p></div>
+      <div><h3>6</h3><p>Tajaajila</p></div>
+      <div><h3 id="iyyata">0</h3><p>Iyyata</p></div>
+      <div><h3>95%</h3><p>Gibiraa</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">&copy; 2026 Magaalaa Bulbulaa</div>
+</footer>
+
+<script>
+  const users = JSON.parse(localStorage.getItem('users')  '[]');
+  const iyyatota = JSON.parse(localStorage.getItem('iyyatota')  '[]');
+  document.getElementById('users').textContent = users.length;
+  document.getElementById('iyyata').textContent = iyyatota.length;
+</script>
+</body>
+</html>
