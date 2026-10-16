@@ -4,24 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Magaalaa Bulbulaa | Fuula Dursa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#222;line-height:1.5}
+body{
+  font-family:'Poppins',system-ui,-apple-system,sans-serif;
+  background:#f5f5f5;
+  color:#222;
+  line-height:1.5;
+}
 .container{max-width:1100px;margin:0 auto;padding:0 20px}
 
 /* Header */
-header{background:#111;color:#fff;padding:12px 0;border-bottom:4px solid #c8102e;position:sticky;top:0;z-index:100}
-.nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+header{
+  background:#111;
+  color:#fff;
+  padding:12px 0;
+  border-bottom:4px solid #c8102e;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
 .logo{font-weight:700;font-size:1.2rem}
 .logo span{color:#ff4d6d}
 nav{display:flex;flex-wrap:wrap;gap:4px}
-nav a{color:#ddd;text-decoration:none;padding:8px 12px;border-radius:6px;font-size:0.92rem}
+nav a{
+  color:#ddd;
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:6px;
+  font-size:0.9rem;
+  font-weight:500;
+}
 nav a:hover,nav a.active{background:#c8102e;color:#fff}
 
 /* Hero */
 .hero{
   position:relative;
-  min-height:75vh;
+  min-height:78vh;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -33,11 +61,45 @@ nav a:hover,nav a.active{background:#c8102e;color:#fff}
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(rgba(0,0,0,0.55),rgba(17,17,17,0.75));
+  background:linear-gradient(rgba(0,0,0,0.55),rgba(17,17,17,0.8));
 }
-.hero-inner{position:relative;z-index:1;padding:40px 20px;max-width:800px}
-.hero h1{font-size:2.4rem;margin-bottom:12px;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
-.hero p{font-size:1.1rem;margin-bottom:24px;opacity:0.95}
+.hero-inner{
+  position:relative;
+  z-index:1;
+  padding:40px 18px;
+  max-width:820px;
+}
+
+/* Halluu gurraacha → diimaa → adii (bitaa → mirga) */
+.color-bar{
+  height:8px;
+  width:min(100%,420px);
+  margin:0 auto 18px;
+  border-radius:6px;
+  background:linear-gradient(90deg,
+    #111 0%, #111 33.33%,
+    #c8102e 33.33%, #c8102e 66.66%,
+    #ffffff 66.66%, #ffffff 100%);
+  border:1px solid rgba(255,255,255,0.35);
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);
+}
+
+.welcome-banner{
+  font-weight:800;
+  font-size:clamp(1.2rem,4.5vw,2.25rem);
+  line-height:1.4;
+  color:#fff;
+  text-shadow:0 2px 14px rgba(0,0,0,0.65);
+  margin-bottom:12px;
+}
+.hero-sub{
+  font-weight:500;
+  font-size:clamp(0.95rem,2.5vw,1.1rem);
+  color:#f0f0f0;
+  margin-bottom:26px;
+  opacity:0.95;
+}
+
 .btn{
   display:inline-block;
   padding:12px 28px;
@@ -48,67 +110,94 @@ nav a:hover,nav a.active{background:#c8102e;color:#fff}
   font-weight:600;
   margin:6px;
   border:2px solid #c8102e;
+  font-size:0.95rem;
 }
-.btn:hover{background:#a00d24}
-.btn.outline{background:transparent;border:2px solid #fff}
+.btn:hover{background:#a00d24;border-color:#a00d24}
+.btn.outline{
+  background:transparent;
+  border:2px solid #fff;
+  color:#fff;
+}
 .btn.outline:hover{background:#fff;color:#111}
 
 /* Sections */
 .section{padding:50px 0}
-.section h2{text-align:center;font-size:1.7rem;margin-bottom:8px}
-.section .sub{text-align:center;color:#666;margin-bottom:30px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.section h2{text-align:center;font-size:1.65rem;margin-bottom:8px;font-weight:700}
+.section .sub{text-align:center;color:#666;margin-bottom:28px;font-weight:500}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
+}
 .card{
   background:#fff;
-  padding:24px 20px;
+  padding:24px 18px;
   border-radius:12px;
   text-align:center;
   border-top:4px solid #c8102e;
   box-shadow:0 4px 14px rgba(0,0,0,0.06);
 }
-.card h3{margin-bottom:8px;font-size:1.15rem}
-.card p{color:#555;font-size:0.95rem;margin-bottom:14px}
+.card h3{margin-bottom:8px;font-size:1.1rem;font-weight:700}
+.card p{color:#555;font-size:0.92rem;margin-bottom:14px;font-weight:500}
 .card a{
   display:inline-block;
-  padding:8px 18px;
+  padding:9px 18px;
   background:#c8102e;
   color:#fff;
   text-decoration:none;
   border-radius:6px;
   font-size:0.9rem;
+  font-weight:600;
 }
 
-/* About strip */
+/* About */
 .about-strip{
   background:#111;
   color:#fff;
-  padding:40px 0;
+  padding:42px 0;
   border-top:4px solid #c8102e;
   border-bottom:4px solid #c8102e;
 }
-.about-strip p{max-width:700px;margin:12px auto 0;text-align:center;opacity:0.9}
+.about-strip h2{text-align:center;margin:0;font-weight:700}
+.about-strip p{
+  max-width:720px;
+  margin:14px auto 0;
+  text-align:center;
+  opacity:0.92;
+  font-weight:500;
+  font-size:0.98rem;
+}
+.about-strip .btn{margin-top:18px}
 
 /* Footer */
-footer{background:#0a0a0a;color:#aaa;text-align:center;padding:24px 16px;font-size:0.9rem}
-footer a{color:#ff4d6d;text-decoration:none}
-
-/* ===== MOBILE ===== */
+footer{
+  background:#0a0a0a;
+  color:#aaa;
+  text-align:center;
+  padding:24px 16px;
+  font-size:0.88rem;
+  font-weight:500;
+}
+footer a{color:#ff4d6d;text-decoration:none;font-weight:600}/* Mobile */
 @media (max-width:768px){
   .nav{flex-direction:column;align-items:flex-start}
   nav{width:100%}
-  nav a{font-size:0.82rem;padding:6px 10px}
-  .hero{min-height:50vh;background-position:center top}
-  .hero h1{font-size:1.55rem}
-  .hero p{font-size:0.95rem}
-  .btn{padding:10px 18px;font-size:0.9rem;display:block;margin:8px auto;max-width:220px}
-  .section{padding:35px 0}
+  nav a{font-size:0.8rem;padding:6px 10px}
+  .hero{min-height:55vh;background-position:center top}
+  .welcome-banner{font-size:1.2rem}
+  .btn{
+    display:block;
+    margin:8px auto;
+    max-width:220px;
+    padding:11px 20px;
+  }
+  .section{padding:36px 0}
   .section h2{font-size:1.35rem}
   .grid{grid-template-columns:1fr;gap:14px}
   .container{padding:0 14px}
 }
-
 @media (max-width:400px){
-  .hero h1{font-size:1.35rem}
+  .welcome-banner{font-size:1.1rem}
   .logo{font-size:1.05rem}
 }
 </style>
@@ -128,10 +217,13 @@ footer a{color:#ff4d6d;text-decoration:none}
       <a href="admin/login.html">Admin</a>
     </nav>
   </div>
-</header><section class="hero">
+</header>
+
+<section class="hero">
   <div class="hero-inner">
-    <h1>Baga Nagaan Dhuftan Magaalaa Bulbulaa</h1>
-    <p>Hariiroo bulchiinsa magaalaa fi hawaasaa cimsuu — tajaajila online, iyyata, gibiraa fi beeksisa.</p>
+    <div class="color-bar" aria-hidden="true"></div>
+    <p class="welcome-banner">Anaa dhufu kun magaalaa keessaan jaallatamtuu fi miidhagduu magaalaa Bulbulaati!!</p>
+    <p class="hero-sub">Hariiroo bulchiinsa magaalaa fi hawaasaa cimsuu</p>
     <a class="btn" href="galmaa.html">Galmaa'i</a>
     <a class="btn outline" href="login.html">Login</a>
   </div>
@@ -168,13 +260,13 @@ footer a{color:#ff4d6d;text-decoration:none}
 
 <section class="about-strip">
   <div class="container">
-    <h2 style="text-align:center;margin:0">Magaalaa Bulbulaa</h2>
+    <h2>Magaalaa Bulbulaa</h2>
     <p>
       Magaalan Bulbulaa naannoo Oromiyaa, godina Kibba Bahaa keessatti argamti.
       Hawaasni ishee aadaa fi tokkummaa ofii jabeessu; madda gootota Oromoo kan akka Leencoo Diigaatii.
       Hojiiwwan akka qonnaa, horsiisaa fi daldalaa irratti hundaa'u.
     </p>
-    <p style="text-align:center;margin-top:16px">
+    <p style="text-align:center">
       <a class="btn" href="about.html">Waa'ee dabalataa</a>
     </p>
   </div>

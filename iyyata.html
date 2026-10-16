@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iyyata Galchi | Magaalaa Bulbulaa</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',system-ui;background:#f0f2f5;min-height:100vh}
+header{background:#111;color:#fff;padding:14px 16px;border-bottom:4px solid #c8102e;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.logo{font-weight:700}.logo span{color:#ff4d6d}
+header a{color:#ddd;text-decoration:none;font-size:0.9rem;padding:6px 10px;border-radius:6px}
+header a:hover{background:#c8102e}
+.wrap{max-width:480px;margin:24px auto;padding:0 14px 40px}
+.card{background:#fff;border-radius:16px;padding:28px 22px;box-shadow:0 8px 30px rgba(0,0,0,0.08);border-top:5px solid #c8102e}
+.card h1{font-size:1.3rem;text-align:center;margin-bottom:6px}
+.hello{text-align:center;color:#666;font-size:0.95rem;margin-bottom:20px}
+label{display:block;font-weight:600;font-size:0.92rem;margin:14px 0 6px}
+label span{color:#c8102e}
+input,select,textarea{width:100%;padding:13px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:1rem;background:#fafafa}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#c8102e;background:#fff}
+textarea{min-height:110px;resize:vertical}
+button{width:100%;margin-top:20px;padding:14px;background:#c8102e;color:#fff;border:none;border-radius:10px;font-size:1.05rem;font-weight:700;cursor:pointer}
+button:disabled{opacity:0.6}
+.links{text-align:center;margin-top:16px;font-size:0.9rem}
+.links a{color:#c8102e;text-decoration:none;margin:0 6px;font-weight:600}
+.msg{display:none;margin-top:14px;padding:12px;border-radius:8px;text-align:center}
+.ok{background:#d1e7dd;color:#0f5132}
+.err{background:#f8d7da;color:#842029}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Magaalaa <span>Bulbulaa</span></div>
+  <div>
+    <a href="tajaajila.html">Tajaajila</a>
+    <a href="gibiraa.html">Gibiraa</a>
+  </div>
+</header>
+<div class="wrap">
+  <div class="card">
+    <h1>Iyyata / Waraqaa Galchi</h1>
+    <p class="hello" id="hi">Nagaa</p>
+    <form id="f">
+      <label>Gosa <span>*</span></label>
+      <select id="gosa" required>
+        <option value="">Filadhu</option>
+        <option value="Waraqaa Eenyummaa">Waraqaa Eenyummaa</option>
+        <option value="Waraqaa Dhalootaa">Waraqaa Dhalootaa</option>
+        <option value="Waraqaa Fuudhaa">Fuudhaa / Geeggeessituu</option>
+        <option value="Rakkoo Ibsaa">Rakkoo Ibsaa</option>
+        <option value="Rakkoo Daandii">Rakkoo Daandii</option>
+        <option value="Kan biroo">Kan biroo</option>
+      </select>
+      <label>Teessoo (Kebele)</label>
+      <input type="text" id="teessoo" placeholder="Kebele 01">
+      <label>Ibsa <span>*</span></label>
+      <textarea id="ibsa" required placeholder="Gaaffii yookiin rakkoo kee barreessi..."></textarea>
+      <button type="submit" id="btn">Galchi</button>
+    </form>
+    <div id="msg" class="msg"></div>
+    <p class="links">
+      <a href="tajaajila.html">Tajaajila</a> |
+      <a href="haala-iyyataa.html">Haala Iyyataa</a>
+    </p>
+  </div>
+</div>
+<script>
+var raw = localStorage.getItem("currentUser");
+var u = null;
+try { u = raw ? JSON.parse(raw) : null; } catch (e) {}
+if (!u) { alert("Dura Login godhi"); location.href = "login.html"; }
+document.getElementById("hi").textContent = "Nagaa, " + (u.maqaa || "");
+document.getElementById("f").onsubmit = async function (e) {
+  e.preventDefault();
+  var g = document.getElementById("gosa").value;
+  var t = document.getElementById("teessoo").value;var ib = document.getElementById("ibsa").value;
+  var btn = document.getElementById("btn");
+  var msg = document.getElementById("msg");
+  if (!g || !ib) { alert("Gosa fi Ibsa guuti"); return; }
+  btn.disabled = true;
+  btn.textContent = "Eegaa...";
+  msg.style.display = "none";
+  try {
+    var client = window.supabase.createClient(
+      "https://wjfvluhjgsvrzkhuzaoi.supabase.co",
+      "sb_publishable_X5froRQvVq1pFxVXZa3p3w_c5ptm_Bs"
+    );
+    var res = await client.from("iyyatota").insert([{
+      maqaa: u.maqaa || "",
+      bilbila: u.bilbila || "",
+      gosa_hojii: u.gosa_hojii || "",
+      gosa_iyyataa: g,
+      teessoo: t,
+      ibsa: ib,
+      haala: "Eegaa"
+    }]).select();
+    if (res.error) {
+      msg.className = "msg err";
+      msg.style.display = "block";
+      msg.textContent = res.error.message;
+      btn.disabled = false;
+      btn.textContent = "Galchi";
+      return;
+    }
+    msg.className = "msg ok";
+    msg.style.display = "block";
+    msg.textContent = "Iyyatni galma'eera!";
+    setTimeout(function () { location.href = "haala-iyyataa.html"; }, 1000);
+  } catch (err) {
+    msg.className = "msg err";
+    msg.style.display = "block";
+    msg.textContent = err.message;
+    btn.disabled = false;
+    btn.textContent = "Galchi";
+  }
+};
+</script>
+</body>
+</html>
